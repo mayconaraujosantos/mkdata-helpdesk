@@ -10,6 +10,7 @@ django-filter = "*"
 django = "*"
 django-guardian = "*"
 drf-yasg = "*"
+pre-commit = "*"
 
 [dev-packages]
 black = "*"
