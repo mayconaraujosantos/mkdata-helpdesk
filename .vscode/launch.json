@@ -1,19 +1,52 @@
+// {
+//   "version": "0.2.0",
+//   "configurations": [
+//     {
+//       "name": "Python: Django",
+//       "type": "python",
+//       "request": "launch",
+//       "program": "${workspaceFolder}/manage.py",
+//       "console": "internalConsole",
+//       "args": ["runserver"],
+//       "env": {
+//         // Add your environment variables here if needed
+//         "DJANGO_SETTINGS_MODULE": "settings"
+//       },
+//       "django": true,
+//       "justMyCode": true
+//     }
+//   ]
+// }
+
 {
   "version": "0.2.0",
   "configurations": [
-    {
-      "name": "Python: Django",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/manage.py",
-      "console": "internalConsole",
-      "args": ["runserver"],
-      "env": {
-        // Add your environment variables here if needed
-        "DJANGO_SETTINGS_MODULE": "settings"
-      },
-      "django": true,
-      "justMyCode": true
-    }
+      {
+          "name": "Python: Django",
+          "type": "python",
+          "request": "launch",
+          "program": "${workspaceFolder}/manage.py",
+          "args": [
+              "runserver"
+          ],
+          "env": {
+              "DJANGO_SETTINGS_MODULE": "settings"
+          },
+          "django": true,
+          "justMyCode": true,
+          "preLaunchTask": "pipenvShell"
+      }
+  ],
+  "tasks": [
+      {
+          "label": "pipenvShell",
+          "type": "shell",
+          "command": "pipenv shell",
+          "group": "build",
+          "presentation": {
+              "reveal": "always",
+              "panel": "new"
+          }
+      }
   ]
 }
