@@ -1,13 +1,14 @@
 {
     "files.autoSave": "afterDelay",
     "editor.fontSize": 14,
-    "editor.fontFamily": "Jetbra  ins Mono",
+    "editor.fontFamily": "JetBrains Mono",
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },   
     "python.envFile": "${workspaceFolder}/.env",
     "python.testing.pytestArgs": [
         "${workspaceFolder}/core",
+        "${workspaceFolder}/auth",
     ],
     "python.testing.unittestEnabled": false,
     "python.formatting.provider": "black",
