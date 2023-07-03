@@ -12,7 +12,6 @@ django-guardian = "*"
 drf-yasg = "*"
 pre-commit = "*"
 djangorestframework-simplejwt = "*"
-mypy = "*"
 
 [dev-packages]
 black = "*"
