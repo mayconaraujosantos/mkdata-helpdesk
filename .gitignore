@@ -31,3 +31,6 @@ __pycache__
 .pytest_cache
 core/__pycache__/*.pyc
 *.pyc
+
+.mypy_cache/
+**/__pycache__/

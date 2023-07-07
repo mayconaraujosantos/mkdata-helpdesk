@@ -1,52 +1,55 @@
 // {
-//   "version": "0.2.0",
-//   "configurations": [
-//     {
-//       "name": "Python: Django",
-//       "type": "python",
-//       "request": "launch",
-//       "program": "${workspaceFolder}/manage.py",
-//       "console": "internalConsole",
-//       "args": ["runserver"],
-//       "env": {
-//         // Add your environment variables here if needed
-//         "DJANGO_SETTINGS_MODULE": "settings"
+//     "version": "0.2.0",
+//     "configurations": [
+//       {
+//         "name": "Django",
+//         "type": "python",
+//         "request": "launch",
+//         "stopOnEntry": false,
+//         "python": "/Users/mayconaraujo/.local/share/virtualenvs/mkdata-helpdesk-KiAzchH0-python/bin/python3.11",
+//         "program": "${workspaceRoot}/manage.py",
+//           "args": [
+//               "runserver",
+//           ],
+//           "debugOptions": [
+//               "WaitOnAbnormalExit",
+//               "WaitOnNormalExit",
+//               "RedirectOutput",
+//               "DjangoDebugging"
+//           ],
+//           "env": {
+//               "DB_NAME": "aroounddb",
+//               "DJANGO_DB_USER": "codeslave",
+//               "DJANGO_DB_PASSWORD": "codeslave",
+//               "DB_HOST": "172.17.0.2",
+//               "DJANGO_DB_PORT": "5432",
+//               "DJANGO_DEBUG": "True",
+//               "DJANGO_SETTINGS_MODULE": "settings"
+//           }
 //       },
-//       "django": true,
-//       "justMyCode": true
-//     }
-//   ]
-// }
+//     ]
+//   }
 
 {
-  "version": "0.2.0",
-  "configurations": [
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
       {
-          "name": "Python: Django",
-          "type": "python",
-          "request": "launch",
-          "program": "${workspaceFolder}/manage.py",
-          "args": [
-              "runserver"
-          ],
-          "env": {
-              "DJANGO_SETTINGS_MODULE": "settings"
-          },
-          "django": true,
-          "justMyCode": true,
-          "preLaunchTask": "pipenvShell"
+        "name": "Python: Django",
+        "type": "python",
+        "request": "launch",
+        "program": "${workspaceRoot}/manage.py",
+        "args": ["runserver"],
+        "debugOptions": [
+            "WaitOnAbnormalExit",
+            "WaitOnNormalExit",
+            "RedirectOutput",
+            "DjangoDebugging"
+        ],
+        "django": true,
+        "justMyCode": true
       }
-  ],
-  "tasks": [
-      {
-          "label": "pipenvShell",
-          "type": "shell",
-          "command": "pipenv shell",
-          "group": "build",
-          "presentation": {
-              "reveal": "always",
-              "panel": "new"
-          }
-      }
-  ]
-}
+    ]
+  }
