@@ -30,6 +30,14 @@ jobs:
     - name: Install Dependencies
       run: |
         pipenv install --dev
+    - name: Cache pip dependencies
+      uses: actions/cache@v2
+      with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/Pipfile.lock') }}
+
+    - name: Activate virtual environment
+      run: pipenv shell
 
     - name: Run Tests
       run: |
