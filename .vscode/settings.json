@@ -10,7 +10,6 @@
   "python.terminal.activateEnvironment": true,
   "python.terminal.activateEnvInCurrentTerminal": true,
   "python.testing.pytestArgs": [
-    "tests/account/",
     "account/tests/",
     "core/tests/"
   ],

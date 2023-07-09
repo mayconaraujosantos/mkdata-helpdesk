@@ -1,5 +1,5 @@
 import logging
-from typing import Any
+from typing import Any, Optional
 
 from drf_yasg.utils import status, swagger_auto_schema
 from rest_framework import viewsets
@@ -16,12 +16,12 @@ class AuthViewSetBase(viewsets.ModelViewSet):
     """
     Base class for authentication view sets.
 
-    This class provides common functionality for authentication-related view sets.
-    It extends the ModelViewSet from the Django Rest Framework and adds additional
-    authentication-specific features.
+    This class provides common functionality for authentication-related
+    view sets. It extends the ModelViewSet from the Django Rest Framework and
+    adds additional authentication-specific features.
     """
 
-    _permission: str = None
+    _permission: Optional[str] = None
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -62,15 +62,19 @@ class UserViewSet(AuthViewSetBase):
 
     @action(detail=True, methods=["PATCH"])
     def change_password(self, request, *args, **kwargs):
-        rs = params_serializer.UserChangePasswordParamsSerializer(data=request.data)
-        rs.is_valid(raise_exception=True)
+        serializer = params_serializer.UserChangePasswordParamsSerializer(
+            data=request.data
+        )
+        serializer.is_valid(raise_exception=True)
 
         user = self.get_object()
-        if not rs.data.get("reset") and not user.check_password(
-            raw_password=rs.data.get("password", None)
-        ):
+        reset_password = serializer.data.get("reset", False)
+        password = serializer.data.get("password", None)
+        new_password = serializer.data.get("new_password")
+
+        if not reset_password and not user.check_password(raw_password=password):
             raise exceptions.InvalidPasswordException
 
-        user.set_password(raw_password=rs.data.get("new_password"))
+        user.set_password(raw_password=new_password)
         user.save()
-        return Response(data={"message": "Password changed successfully"})
+        return Response(data={"detail": True})

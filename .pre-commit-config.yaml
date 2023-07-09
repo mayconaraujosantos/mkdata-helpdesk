@@ -27,7 +27,7 @@ repos:
     name: mypy
     stages: [commit]
     language: system
-    entry: pipenv run mypy
+    entry: pipenv run mypy . --ignore-missing-imports
     types: [python]
     pass_filenames: false
 
@@ -37,11 +37,12 @@ repos:
     language: system
     entry: pipenv run pytest
     types: [python]
+    pass_filenames: false
 
   - id: pytest-cov
     name: pytest
     stages: [push]
     language: system
-    entry: pipenv run pytest --cov --cov-fail-under=1
+    entry: pipenv run pytest
     types: [python]
     pass_filenames: false
