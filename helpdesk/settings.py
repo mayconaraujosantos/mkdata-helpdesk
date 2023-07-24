@@ -27,13 +27,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = environ.get("DEBUG", False)
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-conf_path = path.join(BASE_DIR, ".env")
+conf_path = path.join(BASE_DIR, "./.env")
 if path.exists(conf_path):
     load_dotenv(conf_path)
+
+
+AWS_ACCESS_KEY_ID = ""
+AWS_SECRET_ACCESS_KEY = ""
+AWS_STORAGE_BUCKET_NAME = ""
+AWS_S3_ENDPOINT_URL = "http://localhost:4572"
+AWS_S3_REGION_NAME = "us-east-1"
+AWS_DEFAULT_ACL = "public-read"
+
 
 # Application definition
 
@@ -45,9 +55,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "account.apps.AccountConfig",
+    "core.apps.CoreConfig",
     "drf_yasg",
     "rest_framework",
-    "core.apps.CoreConfig",
 ]
 
 REST_FRAMEWORK = {
@@ -68,6 +78,8 @@ SIMPLE_JWT = {
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
 }
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080"]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -76,6 +88,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "helpdesk.urls"
@@ -154,7 +167,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-STATIC_ROOT = path.join(BASE_DIR, "assets", "static")
+STATIC_ROOT = path.join(BASE_DIR, "staticfiles")
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
 

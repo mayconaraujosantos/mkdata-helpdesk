@@ -1,13 +1,14 @@
 import logging
 from typing import Any, Optional
 
+from django.contrib.auth import models as auth_models
 from drf_yasg.utils import status, swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from account import exceptions, filters, models, params_serializer, serializers
+from account import exceptions, filters, models, params_serializer, queries, serializers
 
 logger = logging.getLogger(__name__)
 
@@ -78,3 +79,34 @@ class UserViewSet(AuthViewSetBase):
         user.set_password(raw_password=new_password)
         user.save()
         return Response(data={"detail": True})
+
+
+class GroupViewSet(AuthViewSetBase):
+    queryset = auth_models.Group.objects.all()
+    serializer_class = serializers.GroupSerializer
+    filter_class = filters.GroupFilter
+    ordering_fields = "__all__"
+    ordering = ("name",)
+
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Any:
+        if "user" in request.query_params:
+            self.queryset = queries.get_user_group(
+                user_id=request.query_params.get("user")
+            )
+        return super(GroupViewSet, self).list(request, *args, **kwargs)
+
+
+class PermissionViewSet(AuthViewSetBase):
+    queryset = auth_models.Permission.objects.all()
+    serializer_class = serializers.PermissionSerializer
+    filter_class = filters.PermissionFilter
+    ordering_fields = "__all__"
+    ordering = "content_type"
+
+
+class ContentTypeViewSet(AuthViewSetBase):
+    queryset = auth_models.ContentType.objects.all()
+    serializer_class = serializers.ContentTypeSerializer
+    filter_class = filters.ContenTypeFilter
+    ordering_fields = "__all__"
+    ordering = ("app_label",)

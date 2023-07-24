@@ -41,7 +41,7 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     path("", lambda request: redirect(reverse("api-root"))),
-    path("/api/v1/", include(routers.urls), name="api-root"),
+    path("api/v1/", include(routers.urls), name="api-root"),
 ]
 
 

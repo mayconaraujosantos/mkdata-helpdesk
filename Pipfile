@@ -20,6 +20,13 @@ djangorestframework-jwt = "*"
 django-cors-headers = "*"
 pyjwt = "*"
 autoflake = "*"
+gunicorn = "*"
+whitenoise = "*"
+coverage = "*"
+codecov = "*"
+django-extensions = "*"
+boto3 = "*"
+django-storages = "*"
 
 [dev-packages]
 mypy = "*"
