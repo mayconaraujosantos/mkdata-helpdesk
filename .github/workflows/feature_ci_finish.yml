@@ -1,0 +1,61 @@
+name: Feature CI and Finish
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.11'  # Replace 'x' with your desired Python version
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install pipenv
+        pipenv install --dev --deploy
+
+    - name: Run Django tests on feature branch
+      run: |
+        pipenv run python manage.py test
+      continue-on-error: true
+
+    - name: Ensure feature branch is finished
+      run: |
+        FEATURE_BRANCH=$(git branch --show-current)
+        git flow feature finish -k $FEATURE_BRANCH
+      continue-on-error: true
+
+    - name: Run Django tests on develop branch
+      run: |
+        git fetch origin develop:develop
+        git checkout develop
+        pipenv run python manage.py test
+
+    - name: Merge feature branch to develop
+      if: ${{ github.ref == 'refs/heads/feature/*' && !cancelled() }}
+      run: |
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+        FEATURE_BRANCH=$(git branch --show-current)
+        git merge --no-ff $FEATURE_BRANCH -m "Merge $FEATURE_BRANCH to develop"
+        git push origin develop
+
+    - name: Delete local feature branch
+      run: |
+        FEATURE_BRANCH=$(git branch --show-current)
+        git branch -d $FEATURE_BRANCH
+
+    - name: Delete remote feature branch
+      run: |
+        FEATURE_BRANCH=$(git branch --show-current)
+        git push --delete origin $FEATURE_BRANCH

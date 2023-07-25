@@ -2,9 +2,11 @@ name: Backend CI
 'on':
   push:
     branches:
-      - develop
-      - release/*
-      - '!feature/*'
+      - 'main'
+      - 'develop'
+      - 'feature/*'
+      - 'release/*'
+      - 'hotfix/*'
 jobs:
   build:
     runs-on: ubuntu-latest
