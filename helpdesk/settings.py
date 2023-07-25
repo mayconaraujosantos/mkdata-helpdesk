@@ -40,8 +40,8 @@ if path.exists(conf_path):
 AWS_ACCESS_KEY_ID = ""
 AWS_SECRET_ACCESS_KEY = ""
 AWS_STORAGE_BUCKET_NAME = ""
-AWS_S3_ENDPOINT_URL = "http://localhost:4572"
-AWS_S3_REGION_NAME = "us-east-1"
+AWS_S3_ENDPOINT_URL = ""
+AWS_S3_REGION_NAME = ""
 AWS_DEFAULT_ACL = "public-read"
 
 
@@ -140,11 +140,11 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": environ.get("DB_NAME"),
-        "USER": environ.get("DB_USER"),
-        "PASSWORD": environ.get("DB_PASSWORD"),
-        "HOST": environ.get("DB_HOST"),
-        "PORT": environ.get("DB_PORT"),
+        "NAME": environ.get("POSTGRES_DB"),
+        "USER": environ.get("POSTGRES_USER"),
+        "PASSWORD": environ.get("POSTGRES_PASSWORD"),
+        "HOST": environ.get("POSTGRES_HOST"),
+        "PORT": environ.get("POSTGRES_PORT"),
     }
 }
 

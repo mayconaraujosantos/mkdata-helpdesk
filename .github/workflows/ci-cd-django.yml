@@ -1,0 +1,78 @@
+name: Django Tests
+
+on:
+  push:
+    branches:
+      - develop
+      - "feature/*"  # Trigger the workflow on pushes to feature branches
+
+jobs:
+  test_develop:
+    name: Test (Develop)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432  # Expose PostgreSQL port
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11  # Choose your desired Python version
+
+    - name: Install dependencies
+      run: |
+        pip install pipenv
+        pipenv install --dev  # Install development dependencies
+
+    - name: Set environment variables
+      run: echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432/teste" >> .env
+
+    - name: Run tests (Develop)
+      run: |
+        pipenv run python manage.py test
+
+  test_feature_branch:
+    name: Test (Feature Branch)
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: helpdesk
+        ports:
+          - 5432:5432  # Expose PostgreSQL port
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11  # Choose your desired Python version
+
+    - name: Install dependencies
+      run: |
+        pip install pipenv
+        pipenv install --dev  # Install development dependencies
+
+    - name: Set environment variables
+      run: echo "DATABASE_URL=postgres://postgres:postgres@localhost:5432/helpdesk" >> .env
+
+    - name: Run tests (Feature Branch)
+      run: |
+        pipenv run python manage.py test
