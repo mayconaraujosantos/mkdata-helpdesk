@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     "core.apps.CoreConfig",
     "drf_yasg",
     "rest_framework",
+    "corsheaders",
 ]
 
 REST_FRAMEWORK = {
