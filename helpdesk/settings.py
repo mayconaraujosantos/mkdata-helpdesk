@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import datetime
-from os import environ, path
+import os
+from os import path
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -36,12 +37,13 @@ conf_path = path.join(BASE_DIR, "./.env")
 if path.exists(conf_path):
     load_dotenv(conf_path)
 
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-AWS_ACCESS_KEY_ID = ""
-AWS_SECRET_ACCESS_KEY = ""
-AWS_STORAGE_BUCKET_NAME = ""
-AWS_S3_ENDPOINT_URL = ""
-AWS_S3_REGION_NAME = ""
+AWS_ACCESS_KEY_ID = os.environ.get("")
+AWS_SECRET_ACCESS_KEY = os.environ.get("")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("")
+AWS_S3_ENDPOINT_URL = os.environ.get("")
+AWS_S3_REGION_NAME = os.environ.get("")
 AWS_DEFAULT_ACL = "public-read"
 
 
@@ -117,9 +119,6 @@ WSGI_APPLICATION = "helpdesk.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 
-SECRET_KEY = environ.get("SECRET_KEY")
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -141,11 +140,11 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": environ.get("POSTGRES_DB"),
-        "USER": environ.get("POSTGRES_USER"),
-        "PASSWORD": environ.get("POSTGRES_PASSWORD"),
-        "HOST": environ.get("POSTGRES_HOST"),
-        "PORT": environ.get("POSTGRES_PORT"),
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 

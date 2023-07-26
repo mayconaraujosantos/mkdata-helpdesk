@@ -11,12 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      POSTGRES_HOST: '${{ secrets.POSTGRES_HOST }}'
-      POSTGRES_PORT: '${{ secrets.POSTGRES_PORT }}'
-      POSTGRES_DB: '${{ secrets.POSTGRES_DB }}'
-      POSTGRES_USER: '${{ secrets.POSTGRES_USER }}'
-      POSTGRES_PASSWORD: '${{ secrets.POSTGRES_PASSWORD }}'
-      SECRET_KEY : '${{ secrets.SECRET_KEY }}'
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      SECRET_KEY : ${{ secrets.SECRET_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -34,19 +34,19 @@ jobs:
           pipenv sync --dev  # Install all dependencies (including dev packages)
       - name: Run Django migrations
         env:
-          POSTGRES_HOST: '${{ secrets.POSTGRES_HOST }}'
-          POSTGRES_PORT: '${{ secrets.POSTGRES_PORT }}'
-          POSTGRES_DB: '${{ secrets.POSTGRES_DB }}'
-          POSTGRES_USER: '${{ secrets.POSTGRES_USER }}'
-          POSTGRES_PASSWORD: '${{ secrets.POSTGRES_PASSWORD }}'
-          SECRET_KEY : '${{ secrets.SECRET_KEY }}'
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SECRET_KEY : ${{ secrets.SECRET_KEY }}
         run: pipenv run python manage.py migrate
       - name: Run tests
         env:
-          POSTGRES_HOST: '${{ secrets.POSTGRES_HOST }}'
-          POSTGRES_PORT: '${{ secrets.POSTGRES_PORT }}'
-          POSTGRES_DB: '${{ secrets.POSTGRES_DB }}'
-          POSTGRES_USER: '${{ secrets.POSTGRES_USER }}'
-          POSTGRES_PASSWORD: '${{ secrets.POSTGRES_PASSWORD }}'
-          SECRET_KEY : '${{ secrets.SECRET_KEY }}'
+          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          SECRET_KEY : ${{ secrets.SECRET_KEY }}
         run: pipenv run python manage.py test
