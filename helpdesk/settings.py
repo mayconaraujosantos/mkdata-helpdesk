@@ -28,6 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = "django-insecure-lmug*)aq_(+ta8pwir-j&4dn6-2(rif@9%-+5xi*yrd-%wrg&j"
+
 # DEBUG = environ.get("DEBUG", False)
 DEBUG = True
 
@@ -37,7 +39,6 @@ conf_path = path.join(BASE_DIR, "./.env")
 if path.exists(conf_path):
     load_dotenv(conf_path)
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
 
 AWS_ACCESS_KEY_ID = os.environ.get("")
 AWS_SECRET_ACCESS_KEY = os.environ.get("")
