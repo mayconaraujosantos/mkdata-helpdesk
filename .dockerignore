@@ -1,0 +1,35 @@
+# Exclude version control directories
+.git
+.svn
+
+# Exclude development and test files
+*.pyc
+__pycache__
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.psql
+*.pdf
+*.env
+*.log
+*.bak
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.mo
+
+# Exclude media and static files (if using Django's collectstatic)
+/media
+/static
+
+# Exclude development-specific directories
+node_modules
+bower_components
+
+# Exclude database data
+/db.sqlite3
+
+# Exclude any other unnecessary files or directories specific to your project

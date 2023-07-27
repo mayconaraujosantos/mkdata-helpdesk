@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import datetime
+import os
+from os import path
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-lmug*)aq_(+ta8pwir-j&4dn6-2(rif@9%-+5xi*yrd-%wrg&j"
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = "django-insecure-lmug*)aq_(+ta8pwir-j&4dn6-2(rif@9%-+5xi*yrd-%wrg&j"
+
+# DEBUG = environ.get("DEBUG", False)
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+conf_path = path.join(BASE_DIR, "./.env")
+if path.exists(conf_path):
+    load_dotenv(conf_path)
+
+
+AWS_ACCESS_KEY_ID = os.environ.get("")
+AWS_SECRET_ACCESS_KEY = os.environ.get("")
+AWS_STORAGE_BUCKET_NAME = os.environ.get("")
+AWS_S3_ENDPOINT_URL = os.environ.get("")
+AWS_S3_REGION_NAME = os.environ.get("")
+AWS_DEFAULT_ACL = "public-read"
 
 
 # Application definition
@@ -37,9 +57,32 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "account.apps.AccountConfig",
+    "core.apps.CoreConfig",
     "drf_yasg",
     "rest_framework",
+    "corsheaders",
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": (
+        "rest_framework.permissions.IsAuthenticatedOrReadOnly",
+    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(seconds=3600),
+    "ROTATE_REFRESH_TOKENS": True,
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
+}
+
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -49,6 +92,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "helpdesk.urls"
@@ -75,32 +119,55 @@ WSGI_APPLICATION = "helpdesk.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
+        "OPTIONS": {
+            "min_length": 4,
+        },
+    }
 ]
 
+AUTH_USER_MODEL = "account.User"
+
+ANONYMOUS_USER_NAME = None
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
+    }
+}
+
+if "QA" in os.environ.get("ENVIRONMENT", ""):
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mydatabase",
+        "USER": "myuser",
+        "PASSWORD": "mypassword",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+
+if "PRODUCTION" in os.environ.get("ENVIRONMENT", ""):
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("PROD_DB_NAME", "my_production_database"),
+        "USER": os.environ.get("PROD_DB_USER", "my_prod_user"),
+        "PASSWORD": os.environ.get("PROD_DB_PASSWORD", "my_prod_password"),
+        "HOST": os.environ.get("PROD_DB_HOST", "production_database_host"),
+        "PORT": os.environ.get("PROD_DB_PORT", "5432"),
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -117,7 +184,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+STATIC_ROOT = path.join(BASE_DIR, "staticfiles")
+
+CORS_ALLOWED_ORIGINS = ["http://localhost:8000", "http://127.0.0.1:8000"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
