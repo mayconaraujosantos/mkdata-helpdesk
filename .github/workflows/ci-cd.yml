@@ -10,7 +10,7 @@ on:
       - 'hotfix/*'
 
 jobs:
-  test:
+  CI-CD:
     runs-on: ubuntu-latest
 
     env:
@@ -47,19 +47,3 @@ jobs:
 
       - name: Run Tests
         run: pipenv run python manage.py test
-        
-      # Install Git Flow CLI
-      - name: Install Git Flow CLI
-        run: |
-          apt-get update -qy
-          apt-get install -y git-flow
-
-      # Finish Feature Branch (if applicable)
-      - name: Finish Feature Branch
-        if: startsWith(github.ref, 'refs/heads/feature/')
-        run: |
-          git config gitflow.prefix.feature "feature/"
-          git checkout main
-          git pull origin main
-          git flow feature finish ${{ github.head_ref }}
-          git push origin main
