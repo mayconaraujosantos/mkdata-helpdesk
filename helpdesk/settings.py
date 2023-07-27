@@ -149,6 +149,25 @@ DATABASES = {
     }
 }
 
+if "QA" in os.environ.get("ENVIRONMENT", ""):
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "mydatabase",
+        "USER": "myuser",
+        "PASSWORD": "mypassword",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
+
+if "PRODUCTION" in os.environ.get("ENVIRONMENT", ""):
+    DATABASES["default"] = {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("PROD_DB_NAME", "my_production_database"),
+        "USER": os.environ.get("PROD_DB_USER", "my_prod_user"),
+        "PASSWORD": os.environ.get("PROD_DB_PASSWORD", "my_prod_password"),
+        "HOST": os.environ.get("PROD_DB_HOST", "production_database_host"),
+        "PORT": os.environ.get("PROD_DB_PORT", "5432"),
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

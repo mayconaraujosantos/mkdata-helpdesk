@@ -1,9 +1,9 @@
-name: Backend CI/CD
+name: CI/CD for Django
 
 on:
   push:
     branches:
-      - 'main'
+      - main
       - 'develop'
       - 'feature/*'
       - 'release/*'
@@ -11,40 +11,39 @@ on:
 
 jobs:
   test:
-    name: Test Django Application
     runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: 'QA'
+
     services:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_USER: your_test_db_user
-          POSTGRES_PASSWORD: your_test_db_password
-          POSTGRES_DB: your_test_db_name
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: mydatabase
         ports:
           - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Python and pipenv
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.11'
 
-      - name: Install PostgreSQL client
-        run: apt-get update && apt-get install -y libpq-dev
+      - name: Install Pipenv
+        run: pip install pipenv
 
-      - name: Install pipenv and dependencies
-        run: |
-          pip install pipenv
-          pipenv install --dev
+      - name: Install Dependencies
+        run: pipenv install --dev
 
-      - name: Set up environment variables
-        env:
-          DATABASE_URL: postgres://your_test_db_user:your_test_db_password@localhost:5432/your_test_db_name
+      - name: Run Migrations
+        run: pipenv run python manage.py migrate
 
-      - name: Run tests
-        run: |
-          pipenv run python manage.py test
-
-
+      - name: Run Tests
+        run: pipenv run python manage.py test
