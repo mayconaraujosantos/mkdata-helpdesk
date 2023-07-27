@@ -1,5 +1,6 @@
-name: Backend CI
-'on':
+name: Backend CI/CD
+
+on:
   push:
     branches:
       - 'main'
@@ -7,46 +8,43 @@ name: Backend CI
       - 'feature/*'
       - 'release/*'
       - 'hotfix/*'
+
 jobs:
-  build:
+  test:
+    name: Test Django Application
     runs-on: ubuntu-latest
-    env:
-      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      SECRET_KEY : ${{ secrets.SECRET_KEY }}
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: your_test_db_user
+          POSTGRES_PASSWORD: your_test_db_password
+          POSTGRES_DB: your_test_db_name
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Python and Pipenv
+
+      - name: Install Python and pipenv
         uses: actions/setup-python@v2
         with:
-          python-version: 3.11
-      - name: Install pipenv
+          python-version: '3.x'
+
+      - name: Install PostgreSQL client
+        run: apt-get update && apt-get install -y libpq-dev
+
+      - name: Install pipenv and dependencies
         run: |
-          pip install --upgrade pip
           pip install pipenv
-      - name: Install dependencies
-        run: |
-          pipenv lock  # Generate the lock file if you haven't already
-          pipenv sync --dev  # Install all dependencies (including dev packages)
-      - name: Run Django migrations
+          pipenv install --dev
+
+      - name: Set up environment variables
         env:
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          SECRET_KEY : ${{ secrets.SECRET_KEY }}
-        run: pipenv run python manage.py migrate
+          DATABASE_URL: postgres://your_test_db_user:your_test_db_password@localhost:5432/your_test_db_name
+
       - name: Run tests
-        env:
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          SECRET_KEY : ${{ secrets.SECRET_KEY }}
-        run: pipenv run python manage.py test
+        run: |
+          pipenv run python manage.py test
+
+
